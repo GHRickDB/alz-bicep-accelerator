@@ -6,9 +6,6 @@ import * as definitions from '../definitions/main.bicep'
 // Parameters
 //================================
 
-@description('Required. The networking option to select.')
-param alzNetworking definitions.alzNetworkingType
-
 @sys.description('The Azure Region to deploy the resources into.')
 param parLocation string = resourceGroup().location
 
@@ -42,6 +39,9 @@ param parTags object = {}
 
 @sys.description('Set Parameter to true to Opt-out of deployment telemetry.')
 param parTelemetryOptOut bool = false
+
+@description('Required. The networking option to select.')
+param alzNetworking definitions.alzNetworkingType
 
 @description('Optional. The hub virtual networks to create.')
 param hubNetworks definitions.hubVirtualNetworkType?
