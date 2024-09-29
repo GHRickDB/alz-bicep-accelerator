@@ -52,21 +52,24 @@ param parVirtualNetworkGatewayAsn int
 // Resources
 //==================================
 
-module virtualNetworkGateway 'br/public:avm/res/network/virtual-network-gateway:0.3.0' = {
+module virtualNetworkGateway 'br/public:avm/res/network/virtual-network-gateway:0.4.0' = {
   name: 'virtualNetworkGw-${uniqueString(resourceGroup().id,parLocation)}'
   params: {
     name: parVirtualNetworkGatewayName
     gatewayType: parVirtualNetworkGatewayType
-    skuName: parVirtualNetworkGatewaySkuName
+    skuName: 'ErGw1AZ'
+    clusterSettings: {
+      clusterMode: 'activePassiveBgp'
+    }
     vNetResourceId: parVirtualNetworkResourceId
-    activeActive: parVirtualNetworkGatewayActiveActive
     vpnType: parVirtualNetworkGatewayVpnType
     vpnGatewayGeneration: parVirtualNetworkGatewayGeneration
-    enableBgp: parVirtualNetworkGatewayEnableBgp
     enableBgpRouteTranslationForNat: parVirtualNetworkGatewayBgpRouteTranslation
     enableDnsForwarding: parVirtualNetworkGatewayEnableDnsForwarding
-    asn: parVirtualNetworkGatewayAsn
     publicIpZones: parAzVpnGatewayAvailabilityZones
     enableTelemetry: parTelemetryOptOut
+    vpnClientAadConfiguration: {
+      
+    }
   }
 }
