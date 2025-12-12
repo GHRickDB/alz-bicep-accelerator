@@ -22,8 +22,8 @@ param parResourceGroupLock lockType?
 @description('Required. The name of the Automation Account.')
 param parAutomationAccountName string
 
-@description('Optional. The flag to enable or disable the Automation Account.')
-param parDisableAutomationAccount bool = true
+@description('Optional. The flag to deploy the Automation Account.')
+param parDeployAutomationAccount bool = false
 
 @description('Optional. The location of the Automation Account.')
 param parAutomationAccountLocation string = 'eastus'
@@ -157,13 +157,13 @@ var varGallerySolutions = [
 // Resources
 //========================================
 
-module modMgmtLoggingResourceGroup 'br/public:avm/res/resources/resource-group:0.4.2' = {
+module modMgmtLoggingResourceGroup 'br/public:avm/res/resources/resource-group:0.4.3' = {
   name: 'modMgmtLoggingResourceGroup-${uniqueString(parMgmtLoggingResourceGroup,parLocations[0])}'
   scope: subscription()
   params: {
     name: parMgmtLoggingResourceGroup
     location: parLocations[0]
-    lock: parGlobalResourceLock ?? parResourceGroupLock
+    lock: parResourceGroupLock ?? parGlobalResourceLock
     tags: parTags
     enableTelemetry: parEnableTelemetry
   }
@@ -178,7 +178,7 @@ resource resResourceGroupPointer 'Microsoft.Resources/resourceGroups@2025-04-01'
 }
 
 // Automation Account
-module modAutomationAccount 'br/public:avm/res/automation/automation-account:0.17.0' = if (!parDisableAutomationAccount) {
+module modAutomationAccount 'br/public:avm/res/automation/automation-account:0.17.1' = if (parDeployAutomationAccount) {
   name: '${parAutomationAccountName}-automationAccount-${uniqueString(parMgmtLoggingResourceGroup,parAutomationAccountLocation,parLocations[0])}'
   scope: resResourceGroupPointer
   params: {
@@ -197,13 +197,13 @@ module modAutomationAccount 'br/public:avm/res/automation/automation-account:0.1
         workspaceResourceId: modLogAnalyticsWorkspace.outputs.resourceId
       }
     ]
-    lock: parGlobalResourceLock ?? parAutomationAccountLock
+    lock: parAutomationAccountLock ?? parGlobalResourceLock
     enableTelemetry: parEnableTelemetry
   }
 }
 
 // Log Analytics Workspace
-module modLogAnalyticsWorkspace 'br/public:avm/res/operational-insights/workspace:0.14.0' = {
+module modLogAnalyticsWorkspace 'br/public:avm/res/operational-insights/workspace:0.14.2' = {
   name: '${parLogAnalyticsWorkspaceName}-logAnalyticsWorkspace-${uniqueString(parMgmtLoggingResourceGroup,parLogAnalyticsWorkspaceLocation,parLocations[0])}'
   scope: resResourceGroupPointer
   params: {
@@ -220,13 +220,13 @@ module modLogAnalyticsWorkspace 'br/public:avm/res/operational-insights/workspac
     features: parLogAnalyticsWorkspaceFeatures
     dataExports: parLogAnalyticsWorkspaceDataExports
     dataSources: parLogAnalyticsWorkspaceDataSources
-    lock: parGlobalResourceLock ?? parLogAnalyticsWorkspaceLock
+    lock: parLogAnalyticsWorkspaceLock ?? parGlobalResourceLock
     enableTelemetry: parEnableTelemetry
   }
 }
 
 // Azure Monitoring Agent Resources
-module modAzureMonitoringAgent 'br/public:avm/ptn/alz/ama:0.1.0' = {
+module modAzureMonitoringAgent 'br/public:avm/ptn/alz/ama:0.1.1' = {
   scope: resResourceGroupPointer
   params: {
     dataCollectionRuleChangeTrackingName: parDataCollectionRuleChangeTrackingName
@@ -237,7 +237,7 @@ module modAzureMonitoringAgent 'br/public:avm/ptn/alz/ama:0.1.0' = {
     dataCollectionRuleVMInsightsExperience: parDataCollectionRuleVMInsightsExperience
     enableTelemetry: parEnableTelemetry
     location: parLocations[0]
-    lockConfig: parGlobalResourceLock ?? parAmaResourcesLock
+    lockConfig: parAmaResourcesLock ?? parGlobalResourceLock
     tags: parTags
   }
 }

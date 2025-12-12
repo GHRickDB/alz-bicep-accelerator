@@ -14,12 +14,12 @@ param parTags = {}
 param parEnableTelemetry = true
 
 // Resource Group Parameters
-param parMgmtLoggingResourceGroup = 'rg-alz-logging-${parLocations[0]}'
+param parMgmtLoggingResourceGroup = '{{resource_group_logging_name_prefix||rg-alz-logging-}}${parLocations[0]}'
 
 // Automation Account Parameters
 param parAutomationAccountName = 'aa-alz-${parLocations[0]}'
 param parAutomationAccountLocation = parLocations[0]
-param parDisableAutomationAccount = true
+param parDeployAutomationAccount = false
 param parAutomationAccountUseManagedIdentity = true
 param parAutomationAccountPublicNetworkAccess = true
 param parAutomationAccountSku = 'Basic'

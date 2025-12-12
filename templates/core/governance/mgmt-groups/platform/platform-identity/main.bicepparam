@@ -9,9 +9,9 @@ param parEnableTelemetry = true
 
 param platformIdentityConfig = {
   createOrUpdateManagementGroup: true
-  managementGroupName: 'identity'
-  managementGroupParentId: 'platform'
-  managementGroupIntermediateRootName: 'alz'
+  managementGroupName: '{{management_group_id_prefix}}{{management_group_identity_id||identity}}{{management_group_id_postfix}}'
+  managementGroupParentId: '{{management_group_id_prefix}}{{management_group_platform_id||platform}}{{management_group_id_postfix}}'
+  managementGroupIntermediateRootName: '{{management_group_id_prefix}}{{management_group_int_root_id||alz}}{{management_group_id_postfix}}'
   managementGroupDisplayName: 'Identity'
   managementGroupDoNotEnforcePolicyAssignments: []
   managementGroupExcludedPolicyAssignments: []
@@ -21,25 +21,15 @@ param platformIdentityConfig = {
   customerPolicySetDefs: []
   customerPolicyAssignments: []
   subscriptionsToPlaceInManagementGroup: ['{{identity_subscription_id}}']
-  waitForConsistencyCounterBeforeCustomPolicyDefinitions: 30
-  waitForConsistencyCounterBeforeCustomPolicySetDefinitions: 30
-  waitForConsistencyCounterBeforeCustomRoleDefinitions: 30
-  waitForConsistencyCounterBeforePolicyAssignments: 30
-  waitForConsistencyCounterBeforeRoleAssignment: 30
-  waitForConsistencyCounterBeforeSubPlacement: 30
+  waitForConsistencyCounterBeforeCustomPolicyDefinitions: 10
+  waitForConsistencyCounterBeforeCustomPolicySetDefinitions: 10
+  waitForConsistencyCounterBeforeCustomRoleDefinitions: 10
+  waitForConsistencyCounterBeforePolicyAssignments: 40
+  waitForConsistencyCounterBeforeRoleAssignments: 40
+  waitForConsistencyCounterBeforeSubPlacement: 10
 }
 
 // Only specify the parameters you want to override - others will use defaults from JSON files
 param parPolicyAssignmentParameterOverrides = {
-  'Deploy-VM-Backup': {
-    exclusionTagName: {
-      value: 'BackupExclusion'
-    }
-    exclusionTagValue: {
-      value: 'true'
-    }
-    vaultLocation: {
-      value: parLocations[0]
-    }
-  }
+    // No policy assignments in platform-identity currently
 }

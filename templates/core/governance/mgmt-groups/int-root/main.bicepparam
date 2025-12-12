@@ -9,7 +9,7 @@ param parEnableTelemetry = true
 
 param intRootConfig = {
   createOrUpdateManagementGroup: true
-  managementGroupName: 'alz'
+  managementGroupName: '{{management_group_id_prefix}}{{management_group_int_root_id||alz}}{{management_group_id_postfix}}'
   managementGroupParentId: '{{root_parent_management_group_id}}'
   managementGroupDisplayName: 'Azure Landing Zones'
   managementGroupDoNotEnforcePolicyAssignments: []
@@ -20,12 +20,12 @@ param intRootConfig = {
   customerPolicySetDefs: []
   customerPolicyAssignments: []
   subscriptionsToPlaceInManagementGroup: []
-  waitForConsistencyCounterBeforeCustomPolicyDefinitions: 30
-  waitForConsistencyCounterBeforeCustomPolicySetDefinitions: 30
-  waitForConsistencyCounterBeforeCustomRoleDefinitions: 30
-  waitForConsistencyCounterBeforePolicyAssignments: 30
-  waitForConsistencyCounterBeforeRoleAssignment: 30
-  waitForConsistencyCounterBeforeSubPlacement: 30
+  waitForConsistencyCounterBeforeCustomPolicyDefinitions: 10
+  waitForConsistencyCounterBeforeCustomPolicySetDefinitions: 10
+  waitForConsistencyCounterBeforeCustomRoleDefinitions: 10
+  waitForConsistencyCounterBeforePolicyAssignments: 40
+  waitForConsistencyCounterBeforeRoleAssignments: 40
+  waitForConsistencyCounterBeforeSubPlacement: 10
 }
 
 // Only specify the parameters you want to override - others will use defaults from JSON files
@@ -37,6 +37,9 @@ param parPolicyAssignmentParameterOverrides = {
       }
       emailSecurityContact: {
         value: 'security@yourcompany.com'
+      }
+      ascExportResourceGroupName: {
+        value: 'rg-alz-asc-${parLocations[0]}'
       }
       ascExportResourceGroupLocation: {
         value: parLocations[0]
@@ -75,6 +78,13 @@ param parPolicyAssignmentParameterOverrides = {
           logicappResourceId: ''
           webhookServiceUri: []
         }
+      }
+    }
+  }
+  'Deploy-AzSqlDb-Auditing': {
+    parameters: {
+      logAnalyticsWorkspaceResourceId: {
+        value: '/subscriptions/{{management_subscription_id}}/resourcegroups/rg-alz-mgmt-${parLocations[0]}/providers/Microsoft.OperationalInsights/workspaces/law-alz-${parLocations[0]}'
       }
     }
   }

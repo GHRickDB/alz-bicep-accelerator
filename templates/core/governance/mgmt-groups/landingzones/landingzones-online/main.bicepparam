@@ -9,9 +9,9 @@ param parEnableTelemetry = true
 
 param landingZonesOnlineConfig = {
   createOrUpdateManagementGroup: true
-  managementGroupName: 'online'
-  managementGroupParentId: 'landingzones'
-  managementGroupIntermediateRootName: 'alz'
+  managementGroupName: '{{management_group_id_prefix}}{{management_group_online_id||online}}{{management_group_id_postfix}}'
+  managementGroupParentId: '{{management_group_id_prefix}}{{management_group_landingzones_id||landingzones}}{{management_group_id_postfix}}'
+  managementGroupIntermediateRootName: '{{management_group_id_prefix}}{{management_group_int_root_id||alz}}{{management_group_id_postfix}}'
   managementGroupDisplayName: 'Online'
   managementGroupDoNotEnforcePolicyAssignments: []
   managementGroupExcludedPolicyAssignments: []
@@ -21,12 +21,12 @@ param landingZonesOnlineConfig = {
   customerPolicySetDefs: []
   customerPolicyAssignments: []
   subscriptionsToPlaceInManagementGroup: []
-  waitForConsistencyCounterBeforeCustomPolicyDefinitions: 30
-  waitForConsistencyCounterBeforeCustomPolicySetDefinitions: 30
-  waitForConsistencyCounterBeforeCustomRoleDefinitions: 30
-  waitForConsistencyCounterBeforePolicyAssignments: 30
-  waitForConsistencyCounterBeforeRoleAssignment: 30
-  waitForConsistencyCounterBeforeSubPlacement: 30
+  waitForConsistencyCounterBeforeCustomPolicyDefinitions: 10
+  waitForConsistencyCounterBeforeCustomPolicySetDefinitions: 10
+  waitForConsistencyCounterBeforeCustomRoleDefinitions: 10
+  waitForConsistencyCounterBeforePolicyAssignments: 40
+  waitForConsistencyCounterBeforeRoleAssignments: 40
+  waitForConsistencyCounterBeforeSubPlacement: 10
 }
 
 // Currently no policy assignments for online landing zones
